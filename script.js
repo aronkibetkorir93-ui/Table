@@ -39,7 +39,6 @@ function unlockAdmin() {
         isAdmin = true;
         document.getElementById('saveBtn').classList.remove('hidden');
         renderFixtures();
-        alert("Admin Mode ON");
     }
 }
 
@@ -50,22 +49,20 @@ function renderFixtures() {
     fixtures.forEach((f, i) => {
         if (f.r !== currentR) {
             currentR = f.r;
-            container.innerHTML += `<div class="round-header">MATCH WEEK ${currentR}</div>`;
+            container.innerHTML += `<div style="color:var(--gold); padding:10px 0; border-bottom:1px solid var(--gold)">ROUND ${currentR}</div>`;
         }
         container.innerHTML += `
             <div class="match">
-                <span class="team-name" style="text-align:right">${f.p1}</span>
-                <div style="display:flex; gap:5px;">
-                    <input type="number" value="${f.s1!==null?f.s1:''}" ${!isAdmin?'readonly':''} onchange="updateScore(${i},'s1',this.value)">
-                    <input type="number" value="${f.s2!==null?f.s2:''}" ${!isAdmin?'readonly':''} onchange="updateScore(${i},'s2',this.value)">
-                </div>
-                <span class="team-name">${f.p2}</span>
+                <span style="width:40%; text-align:right">${f.p1}</span>
+                <input type="number" value="${f.s1!==null?f.s1:''}" ${!isAdmin?'readonly':''} onchange="updateScore(${i},'s1',this.value)" style="width:30px; text-align:center; background:#000; color:var(--gold); border:1px solid var(--gold)">
+                <input type="number" value="${f.s2!==null?f.s2:''}" ${!isAdmin?'readonly':''} onchange="updateScore(${i},'s2',this.value)" style="width:30px; text-align:center; background:#000; color:var(--gold); border:1px solid var(--gold)">
+                <span style="width:40%">${f.p2}</span>
             </div>`;
     });
 }
 
 function updateScore(idx, key, val) {
-    fixtures[idx][key] = (val === "" || val === null) ? null : parseInt(val);
+    fixtures[idx][key] = val === "" ? null : parseInt(val);
     calculateTable();
 }
 
@@ -86,40 +83,50 @@ function calculateTable() {
         }
     });
 
-    const sortedTable = Object.entries(stats).sort((a,b) => b[1].pts - a[1].pts || b[1].gd - a[1].gd);
+    const sorted = Object.entries(stats).sort((a,b) => b[1].pts - a[1].pts || b[1].gd - a[1].gd);
     
-    // Automatic Awards Logic
-    const topScorer = Object.entries(stats).sort((a,b) => b[1].gf - a[1].gf)[0];
-    const bestDef = Object.entries(stats).filter(p => p[1].p > 0).sort((a,b) => a[1].ga - b[1].ga || b[1].p - a[1].p)[0];
-
-    document.getElementById('topScorer').innerText = topScorer[1].gf > 0 ? `${topScorer[0]} (${topScorer[1].gf})` : "Waiting...";
-    document.getElementById('bestDefense').innerText = bestDef ? `${bestDef[0]} (${bestDef[1].ga} conceded)` : "Waiting...";
+    // Awards calculation
+    const ts = Object.entries(stats).sort((a,b) => b[1].gf - a[1].gf)[0];
+    const bd = Object.entries(stats).filter(x => x[1].p > 0).sort((a,b) => a[1].ga - b[1].ga)[0];
+    
+    document.getElementById('topScorer').innerText = ts[1].gf > 0 ? `${ts[0]} (${ts[1].gf})` : "---";
+    document.getElementById('bestDefense').innerText = bd ? `${bd[0]} (${bd[1].ga} GA)` : "---";
 
     const tbody = document.getElementById('tableBody');
     tbody.innerHTML = '';
-    sortedTable.forEach((item, i) => {
+    sorted.forEach((item, i) => {
         const [name, s] = item;
-        tbody.innerHTML += `<tr><td>${i+1}</td><td class="col-name text-left">${name}</td><td>${s.p}</td><td>${s.w}</td><td>${s.d}</td><td>${s.l}</td><td>${s.gf}</td><td>${s.ga}</td><td>${s.gd}</td><td class="gold-pts">${s.pts}</td></tr>`;
+        tbody.innerHTML += `
+            <div class="table-row">
+                <span class="col-pos">${i+1}</span>
+                <span class="col-name">${name}</span>
+                <span class="col-s">${s.p}</span>
+                <span class="col-s">${s.w}</span>
+                <span class="col-s">${s.d}</span>
+                <span class="col-s">${s.l}</span>
+                <span class="col-s">${s.gf}</span>
+                <span class="col-s">${s.ga}</span>
+                <span class="col-s">${s.gd}</span>
+                <span class="col-pts">${s.pts}</span>
+            </div>`;
     });
 }
 
-function saveData() {
-    localStorage.setItem('efl_v_awards', JSON.stringify(fixtures));
-    alert("Scores and Awards updated locally! Refresh then re-upload script.js to GitHub.");
-}
-
 function downloadTable() {
-    const area = document.getElementById('captureArea');
-    html2canvas(area, { backgroundColor: "#0a192f", scale: 2 }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = 'EFL-Standings.png';
+    html2canvas(document.querySelector("#captureArea")).then(canvas => {
+        let link = document.createElement('a');
+        link.download = 'EFL_Standings.png';
         link.href = canvas.toDataURL();
         link.click();
     });
 }
 
-const saved = localStorage.getItem('efl_v_awards');
-if (saved) fixtures = JSON.parse(saved);
+function saveData() {
+    localStorage.setItem('efl_final', JSON.stringify(fixtures));
+    alert("Standings Updated!");
+}
+
+const local = localStorage.getItem('efl_final');
+if (local) fixtures = JSON.parse(local);
 renderFixtures();
 calculateTable();
-          
