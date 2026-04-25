@@ -3,132 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EFL Season 1 | Official Standings</title>
+    <title>EFL Season 1 | Official</title>
     <style>
-        :root { --gold: #d4af37; --navy: #020617; --white: #ffffff; --row-alt: rgba(255, 255, 255, 0.03); }
-        
+        :root { --gold: #d4af37; --navy: #020617; }
         * { box-sizing: border-box; }
-        body, html { margin: 0; padding: 0; background: #000; color: #fff; font-family: 'Arial Black', sans-serif; height: 100%; overflow-x: hidden; }
+        body, html { 
+            margin: 0; padding: 0; background: #000; color: #fff; 
+            font-family: 'Arial Narrow', sans-serif; height: 100vh; overflow: hidden;
+        }
 
-        /* Background and Container */
         .main-container {
             background: linear-gradient(180deg, #0f172a 0%, #020617 100%);
-            min-height: 100vh;
+            height: 100vh; /* Forces full screen height */
             display: flex;
             flex-direction: column;
+            padding: 5px;
+        }
+
+        #captureArea { 
+            display: flex; 
+            flex-direction: column; 
+            flex-grow: 1; /* This is what fills the "down space" */
+            background: #020617;
             padding: 10px;
         }
 
-        /* Header Styling */
-        header { text-align: center; padding: 10px 0; }
-        .league-title { color: var(--gold); font-size: 1.5rem; margin: 5px 0; text-transform: uppercase; letter-spacing: 1px; }
-        .season-tag { font-size: 0.8rem; letter-spacing: 4px; opacity: 0.7; margin-top: -5px; }
+        header { text-align: center; margin-bottom: 10px; }
+        .league-title { color: var(--gold); font-size: 1.4rem; margin: 0; font-weight: 900; letter-spacing: 1px; }
 
-        /* Awards Row */
-        .awards { display: flex; gap: 8px; margin: 15px 0; }
+        .awards { display: flex; gap: 5px; margin-bottom: 10px; }
         .award-card { 
-            flex: 1; border: 1px solid var(--gold); border-radius: 6px; padding: 8px; 
-            background: rgba(212, 175, 55, 0.08); text-align: center;
+            flex: 1; border: 1px solid var(--gold); padding: 8px; 
+            text-align: center; background: rgba(212,175,55,0.05); border-radius: 4px;
         }
-        .award-label { font-size: 0.6rem; color: var(--gold); display: block; margin-bottom: 2px; }
-        .award-val { font-size: 0.8rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .award-label { font-size: 0.55rem; color: var(--gold); display: block; font-weight: bold; }
+        .award-val { font-size: 0.75rem; font-weight: bold; }
 
-        /* REAL EPL TABLE STYLING */
-        .table-section {
-            flex-grow: 1; /* Fills the remaining space */
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--gold);
-            border-radius: 8px;
-            overflow: hidden;
+        /* THE TABLE - STRETCHED TO BOTTOM */
+        .table-container {
+            flex-grow: 1; /* Makes the table body stretch to fill the screen */
             display: flex;
             flex-direction: column;
+            border: 1px solid var(--gold);
+            background: rgba(0,0,0,0.4);
+            border-radius: 4px;
+            overflow: hidden;
         }
 
-        .table-header {
+        .t-header {
             background: var(--gold);
             color: #000;
             display: flex;
             font-weight: 900;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             padding: 12px 0;
-            text-transform: uppercase;
+            text-align: center;
         }
 
-        .table-body { flex-grow: 1; overflow-y: auto; }
+        .t-body { flex-grow: 1; }
 
         .t-row {
             display: flex;
-            align-items: center;
             border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-            padding: 14px 0;
-            font-size: 0.85rem;
+            padding: 15px 0; /* More padding to make rows look "bigger" */
+            font-size: 0.8rem;
+            align-items: center;
         }
-        .t-row:nth-child(even) { background: var(--row-alt); }
 
-        /* Perfect Column Ratios */
-        .col-pos { width: 10%; text-align: center; font-weight: 900; }
-        .col-name { width: 35%; text-align: left; padding-left: 10px; border-left: 1px solid rgba(212, 175, 55, 0.2); text-transform: uppercase; }
-        .col-s { width: 7%; text-align: center; border-left: 1px solid rgba(212, 175, 55, 0.1); font-size: 0.75rem; }
+        /* COLUMN WIDTHS FOR PERFECT FIT */
+        .col-pos { width: 8%; text-align: center; font-weight: 900; }
+        .col-name { 
+            width: 30%; /* Tightened to fit more stats */
+            text-align: left; padding-left: 4px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            text-transform: uppercase; font-weight: bold;
+        }
+        .col-s { width: 7.5%; text-align: center; border-left: 1px solid rgba(212,175,55,0.1); }
         .col-pts { 
-            width: 11%; text-align: center; font-weight: 900; color: var(--gold); 
-            border-left: 2px solid var(--gold); background: rgba(212, 175, 55, 0.1); 
+            width: 10%; text-align: center; font-weight: 900; 
+            color: var(--gold); background: rgba(212, 175, 55, 0.1); 
+            border-left: 1px solid var(--gold);
         }
 
-        /* Fixtures & Admin */
-        .admin-zone { text-align: center; padding: 20px 0; }
-        .btn-gold { background: var(--gold); border: none; padding: 12px 25px; font-weight: 900; border-radius: 4px; cursor: pointer; }
-        .fixtures { background: #050b18; padding: 15px; border-top: 2px solid var(--gold); }
-        .match { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #1e293b; font-size: 0.8rem; }
-        .match input { width: 35px; background: #000; color: var(--gold); border: 1px solid var(--gold); text-align: center; font-weight: bold; }
+        .action-bar { padding: 15px; text-align: center; }
+        .btn-gold { 
+            background: var(--gold); border: none; padding: 12px 25px; 
+            font-weight: 900; border-radius: 4px; cursor: pointer;
+        }
+        
+        /* Admin Section */
+        .admin-zone { background: #050b18; padding: 15px; position: absolute; bottom: 0; width: 100%; z-index: 100; border-top: 2px solid var(--gold); }
+        .match { display: flex; justify-content: space-between; padding: 10px 0; font-size: 0.75rem; border-bottom: 1px solid #1e293b; }
+        input { width: 35px; background: #000; color: var(--gold); border: 1px solid var(--gold); text-align: center; }
         .hidden { display: none; }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
-    <div id="captureArea" class="main-container">
-        <header>
-            <h1 class="league-title">ELITE FOOTBALL LEAGUE</h1>
-            <div class="season-tag">SEASON 1 STANDINGS</div>
-        </header>
+    <div class="main-container">
+        <div id="captureArea">
+            <header>
+                <h1 class="league-title">ELITE FOOTBALL LEAGUE</h1>
+                <div style="font-size:0.6rem; letter-spacing:4px; opacity:0.6">SEASON 1 STANDINGS</div>
+            </header>
 
-        <div class="awards">
-            <div class="award-card">
-                <span class="award-label">🔥 GOLDEN BOOT</span>
-                <div id="topScorer" class="award-val">---</div>
+            <div class="awards">
+                <div class="award-card">
+                    <span class="award-label">🔥 TOP SCORER</span>
+                    <div id="topScorer" class="award-val">---</div>
+                </div>
+                <div class="award-card">
+                    <span class="award-label">🛡️ BEST DEFENCE</span>
+                    <div id="bestDefense" class="award-val">---</div>
+                </div>
             </div>
-            <div class="award-card">
-                <span class="award-label">🛡️ GOLDEN GLOVE</span>
-                <div id="bestDefense" class="award-val">---</div>
+
+            <div class="table-container">
+                <div class="t-header">
+                    <div class="col-pos">#</div>
+                    <div class="col-name">PLAYER</div>
+                    <div class="col-s">P</div><div class="col-s">W</div><div class="col-s">D</div><div class="col-s">L</div>
+                    <div class="col-s">GF</div><div class="col-s">GA</div><div class="col-s">GD</div>
+                    <div class="col-pts">PTS</div>
+                </div>
+                <div id="tableBody" class="t-body"></div>
             </div>
         </div>
 
-        <section class="table-section">
-            <div class="table-header">
-                <div class="col-pos">#</div>
-                <div class="col-name">PLAYER</div>
-                <div class="col-s">P</div>
-                <div class="col-s">W</div>
-                <div class="col-s">D</div>
-                <div class="col-s">L</div>
-                <div class="col-s">GD</div>
-                <div class="col-pts">PTS</div>
+        <div class="action-bar">
+            <button class="btn-gold" onclick="downloadTable()">DOWNLOAD PNG</button>
+            <p onclick="unlockAdmin()" style="font-size: 0.6rem; color: #475569; margin-top: 10px; cursor: pointer;">ADMIN LOGIN</p>
+        </div>
+
+        <section id="adminSection" class="admin-zone hidden">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="color:var(--gold); margin:0;">INPUT RESULTS</h3>
+                <button onclick="saveData()" style="background:var(--gold); border:none; padding:5px 10px; font-weight:bold;">SAVE</button>
             </div>
-            <div id="tableContent" class="table-body">
-                </div>
+            <div id="fixtureList" style="max-height: 200px; overflow-y: auto; margin-top:10px;"></div>
         </section>
     </div>
-
-    <div class="admin-zone">
-        <button class="btn-gold" onclick="downloadTable()">SAVE AS IMAGE</button>
-        <p onclick="unlockAdmin()" style="font-size: 0.6rem; color: #475569; margin-top: 15px; cursor: pointer;">ADMIN LOGIN</p>
-    </div>
-
-    <section id="fixtureSection" class="fixtures">
-        <h2 style="color:var(--gold); font-size: 1rem;">RESULTS INPUT</h2>
-        <div id="fixtureList"></div>
-        <button id="saveBtn" class="btn-gold hidden" style="width:100%; margin-top:10px;" onclick="saveData()">PUBLISH RESULTS</button>
-    </section>
 
     <script>
         const players = ["KIBET ARON", "BRALYN KIPKIRUI", "MANU KHEED", "LINO", "HOLYPLUG", "MANU JOSH", "BLAMEK", "IAN TOO"];
@@ -143,12 +158,9 @@
             { r: 2, p1: "KIBET ARON", p2: "BRALYN KIPKIRUI", s1: null, s2: null }
         ];
 
-        let isAdmin = false;
-
         function unlockAdmin() {
             if (prompt("ADMIN KEY:") === "EliteAdmin2026") {
-                isAdmin = true;
-                document.getElementById('saveBtn').classList.remove('hidden');
+                document.getElementById('adminSection').classList.remove('hidden');
                 renderFixtures();
             }
         }
@@ -157,15 +169,7 @@
             const list = document.getElementById('fixtureList');
             list.innerHTML = '';
             fixtures.forEach((f, i) => {
-                list.innerHTML += `
-                    <div class="match">
-                        <span style="width:38%; text-align:right">${f.p1}</span>
-                        <div style="display:flex; gap:5px;">
-                            <input type="number" value="${f.s1!==null?f.s1:''}" ${!isAdmin?'readonly':''} onchange="updateScore(${i},'s1',this.value)">
-                            <input type="number" value="${f.s2!==null?f.s2:''}" ${!isAdmin?'readonly':''} onchange="updateScore(${i},'s2',this.value)">
-                        </div>
-                        <span style="width:38%">${f.p2}</span>
-                    </div>`;
+                list.innerHTML += `<div class="match"><span>${f.p1}</span><div><input type="number" value="${f.s1!==null?f.s1:''}" onchange="updateScore(${i},'s1',this.value)"> <input type="number" value="${f.s2!==null?f.s2:''}" onchange="updateScore(${i},'s2',this.value)"></div><span>${f.p2}</span></div>`;
             });
         }
 
@@ -177,7 +181,6 @@
         function calculateTable() {
             let stats = {};
             players.forEach(p => stats[p] = { p:0, w:0, d:0, l:0, gf:0, ga:0, gd:0, pts:0 });
-            
             fixtures.forEach(f => {
                 if (f.s1 !== null && f.s2 !== null) {
                     stats[f.p1].p++; stats[f.p2].p++;
@@ -192,26 +195,21 @@
             });
 
             const sorted = Object.entries(stats).sort((a,b) => b[1].pts - a[1].pts || b[1].gd - a[1].gd);
-            
-            // Awards calculation
             const ts = Object.entries(stats).sort((a,b) => b[1].gf - a[1].gf)[0];
             const bd = Object.entries(stats).filter(x => x[1].p > 0).sort((a,b) => a[1].ga - b[1].ga)[0];
             document.getElementById('topScorer').innerText = ts[1].gf > 0 ? `${ts[0]} (${ts[1].gf})` : "---";
             document.getElementById('bestDefense').innerText = bd ? `${bd[0]} (${bd[1].ga} GA)` : "---";
 
-            const content = document.getElementById('tableContent');
-            content.innerHTML = '';
+            const body = document.getElementById('tableBody');
+            body.innerHTML = '';
             sorted.forEach((item, i) => {
                 const [name, s] = item;
-                content.innerHTML += `
+                body.innerHTML += `
                     <div class="t-row">
                         <div class="col-pos">${i+1}</div>
                         <div class="col-name">${name}</div>
-                        <div class="col-s">${s.p}</div>
-                        <div class="col-s">${s.w}</div>
-                        <div class="col-s">${s.d}</div>
-                        <div class="col-s">${s.l}</div>
-                        <div class="col-s">${s.gd}</div>
+                        <div class="col-s">${s.p}</div><div class="col-s">${s.w}</div><div class="col-s">${s.d}</div><div class="col-s">${s.l}</div>
+                        <div class="col-s">${s.gf}</div><div class="col-s">${s.ga}</div><div class="col-s">${s.gd}</div>
                         <div class="col-pts">${s.pts}</div>
                     </div>`;
             });
@@ -219,22 +217,24 @@
 
         function downloadTable() {
             const area = document.getElementById('captureArea');
-            html2canvas(area, { backgroundColor: "#020617" }).then(canvas => {
+            html2canvas(area, { 
+                backgroundColor: "#020617",
+                scale: 2 // High resolution download
+            }).then(canvas => {
                 let link = document.createElement('a');
-                link.download = 'EFL_Standings.png';
+                link.download = 'EFL_Standings_Full.png';
                 link.href = canvas.toDataURL();
                 link.click();
             });
         }
 
         function saveData() {
-            localStorage.setItem('efl_final_locked', JSON.stringify(fixtures));
-            alert("STANDINGS PUBLISHED!");
+            localStorage.setItem('efl_final_v4', JSON.stringify(fixtures));
+            alert("STANDINGS SAVED!");
         }
 
-        const local = localStorage.getItem('efl_final_locked');
+        const local = localStorage.getItem('efl_final_v4');
         if (local) fixtures = JSON.parse(local);
-        renderFixtures();
         calculateTable();
     </script>
 </body>
