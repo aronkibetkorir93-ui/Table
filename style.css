@@ -1,62 +1,36 @@
-:root {
-    --gold: #d4af37;
-    --navy: #050b18;
-    --row-bg: rgba(255, 255, 255, 0.05);
-    --white: #ffffff;
-}
+:root { --gold: #d4af37; --navy: #020617; --white: #ffffff; }
+body { background: #000; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; }
 
-body { background: #000; color: var(--white); font-family: 'Arial Black', sans-serif; margin: 0; padding: 0; }
-
-.main-bg { 
-    background: linear-gradient(to bottom, #0f172a, #020617); 
-    padding: 20px 10px;
-    min-height: 100vh;
-}
-
+.main-bg { background: linear-gradient(180deg, #0f172a 0%, #020617 100%); padding: 20px 5px; min-height: 100vh; }
 .league-header { text-align: center; margin-bottom: 20px; }
-.main-logo { width: 100px; }
-.league-title { color: var(--gold); font-size: 1.8rem; margin: 10px 0 0; letter-spacing: 2px; }
-.season-label { margin: 0; font-size: 1rem; letter-spacing: 4px; }
+.main-logo { width: 90px; }
+.gold-text { color: var(--gold); margin: 5px 0; letter-spacing: 1px; font-weight: 900; text-transform: uppercase; }
+.season-text { margin: 0; letter-spacing: 5px; font-size: 0.8rem; opacity: 0.8; }
 
-/* Awards Styling */
-.awards-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-.award-box { border: 1px solid var(--gold); background: rgba(212, 175, 55, 0.1); border-radius: 8px; padding: 10px; text-align: center; }
-.award-icon { font-size: 0.7rem; color: var(--gold); display: block; margin-bottom: 5px; }
-.award-value { font-size: 0.9rem; font-weight: bold; }
+.awards-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; padding: 0 10px; }
+.award-box { border: 1px solid var(--gold); border-radius: 4px; padding: 10px; text-align: center; background: rgba(212,175,55,0.05); }
+.award-box .label { font-size: 0.6rem; color: var(--gold); display: block; margin-bottom: 3px; font-weight: bold; }
+.award-box .val { font-size: 0.8rem; font-weight: bold; }
 
-/* Table Section - MATCHING YOUR IMAGE */
-.table-section { width: 100%; border-top: 2px solid var(--gold); border-bottom: 2px solid var(--gold); }
-.table-header-row { 
-    display: flex; 
-    background: var(--gold); 
-    color: #000; 
-    font-size: 0.8rem; 
-    font-weight: bold; 
-    padding: 10px 0;
-}
+/* FIXED GRID SYSTEM */
+.standings-container { border-top: 2px solid var(--gold); border-bottom: 2px solid var(--gold); overflow-x: auto; width: 100%; }
+.grid-row { display: flex; min-width: 580px; align-items: center; border-bottom: 1px solid rgba(212,175,55,0.2); }
+.grid-row.header { background: var(--gold); color: #000; font-weight: 900; font-size: 0.7rem; padding: 8px 0; }
+.grid-row:not(.header) { padding: 12px 0; }
 
-.table-row { 
-    display: flex; 
-    padding: 12px 0; 
-    border-bottom: 1px solid rgba(212, 175, 55, 0.3); 
-    align-items: center; 
-}
+.c-pos { width: 40px; text-align: center; font-weight: bold; }
+.c-name { flex: 1; min-width: 130px; text-align: left; padding-left: 8px; border-left: 1px solid rgba(212,175,55,0.3); font-size: 0.8rem; text-transform: uppercase; }
+.c-s { width: 35px; text-align: center; border-left: 1px solid rgba(212,175,55,0.3); font-size: 0.75rem; }
+.c-pts { width: 45px; text-align: center; border-left: 1px solid rgba(212,175,55,0.3); background: rgba(212,175,55,0.1); color: var(--gold); font-weight: bold; }
 
-/* Precise Column Widths */
-.col-pos { width: 10%; text-align: center; }
-.col-name { width: 35%; text-align: left; padding-left: 5px; text-transform: uppercase; font-size: 0.85rem; border-left: 1px solid var(--gold); }
-.col-s { width: 6.5%; text-align: center; font-size: 0.8rem; border-left: 1px solid var(--gold); }
-.col-pts { width: 10%; text-align: center; font-weight: bold; color: var(--gold); border-left: 1px solid var(--gold); background: rgba(212, 175, 55, 0.1); }
+.footer-graphic { text-align: center; margin-top: 30px; opacity: 0.5; }
+.ball { width: 50px; filter: invert(1); }
 
-/* Footer */
-.footer-ball { text-align: center; margin-top: 30px; }
-.ball-img { width: 60px; filter: invert(1); opacity: 0.8; }
-
-/* Fixtures (kept clean) */
-.fixtures-card { background: #0a101f; padding: 15px; margin-top: 20px; }
-.section-title { color: var(--gold); border-bottom: 1px solid var(--gold); padding-bottom: 5px; }
-.match { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #1e293b; }
-.admin-controls { text-align: center; padding: 20px; }
-#downloadBtn { background: var(--gold); border: none; padding: 10px 20px; font-weight: bold; border-radius: 5px; cursor: pointer; }
-#saveBtn { width: 100%; background: var(--gold); border: none; padding: 15px; font-weight: bold; margin-top: 10px; border-radius: 5px; }
+/* Admin & Fixtures */
+.admin-panel { text-align: center; padding: 20px 0; }
+.btn-gold { background: var(--gold); border: none; padding: 10px 20px; font-weight: bold; border-radius: 4px; cursor: pointer; }
+.btn-link { background: none; border: none; color: #475569; font-size: 0.7rem; display: block; margin: 10px auto; text-decoration: underline; cursor: pointer; }
+.fixtures-section { background: #0a101f; padding: 15px; border-top: 1px solid #1e293b; }
+.match { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #1e293b; font-size: 0.8rem; }
+input { width: 30px; background: #000; color: var(--gold); border: 1px solid var(--gold); text-align: center; border-radius: 3px; }
 .hidden { display: none; }
