@@ -3,60 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EFL | Season 1</title>
+    <title>EFL Season 1 Portal</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
     <div id="captureArea" class="main-bg">
         <header class="league-header">
-            <img src="" alt="Logo" class="main-logo">
-            <h1 class="league-title">ELITE FOOTBALL LEAGUE</h1>
-            <p class="season-label">SEASON 1</p>
+            <img src="1000059186.png" alt="EFL Logo" class="main-logo">
+            <h1 class="gold-text">ELITE FOOTBALL LEAGUE</h1>
+            <p class="season-text">SEASON 1</p>
         </header>
 
-        <div class="awards-container">
+        <div class="awards-row">
             <div class="award-box">
-                <span class="award-icon">🔥 TOP SCORER</span>
-                <div id="topScorer" class="award-value">---</div>
+                <span class="label">🔥 TOP SCORER</span>
+                <div id="topScorer" class="val">---</div>
             </div>
             <div class="award-box">
-                <span class="award-icon">🛡️ BEST DEFENCE</span>
-                <div id="bestDefense" class="award-value">---</div>
+                <span class="label">🛡️ BEST DEFENCE</span>
+                <div id="bestDefense" class="val">---</div>
             </div>
         </div>
 
-        <section class="table-section">
-            <div class="table-header-row">
-                <span class="col-pos">POS</span>
-                <span class="col-name">PLAYER NAME</span>
-                <span class="col-s">P</span>
-                <span class="col-s">W</span>
-                <span class="col-s">D</span>
-                <span class="col-s">L</span>
-                <span class="col-s">GF</span>
-                <span class="col-s">GA</span>
-                <span class="col-s">GD</span>
-                <span class="col-pts">Pts</span>
+        <section class="standings-container">
+            <div class="grid-row header">
+                <div class="c-pos">POS</div>
+                <div class="c-name">PLAYER NAME</div>
+                <div class="c-s">P</div>
+                <div class="c-s">W</div>
+                <div class="c-s">D</div>
+                <div class="c-s">L</div>
+                <div class="c-s">GF</div>
+                <div class="c-s">GA</div>
+                <div class="c-s">GD</div>
+                <div class="c-pts">Pts</div>
             </div>
-            <div id="tableBody" class="table-rows">
-                </div>
+            <div id="tableBody"></div>
         </section>
-        
-        <div class="footer-ball">
-            <img src="https://cdn-icons-png.flaticon.com/512/53/53254.png" alt="ball" class="ball-img">
+
+        <div class="footer-graphic">
+            <img src="https://cdn-icons-png.flaticon.com/512/53/53254.png" class="ball">
         </div>
     </div>
 
-    <div class="admin-controls">
-        <button id="downloadBtn" onclick="downloadTable()">Download Standings</button>
-        <button id="adminToggle" onclick="unlockAdmin()">Admin Login</button>
+    <div class="admin-panel">
+        <button onclick="downloadTable()" class="btn-gold">Download PNG</button>
+        <button onclick="unlockAdmin()" class="btn-link">Admin Login</button>
     </div>
 
-    <section class="fixtures-card">
-        <h2 class="section-title">FIXTURES & RESULTS</h2>
+    <section class="fixtures-section">
+        <h2 class="gold-text">FIXTURES</h2>
         <div id="fixtureContainer"></div>
-        <button id="saveBtn" class="hidden" onclick="saveData()">SAVE & UPDATE STANDINGS</button>
+        <button id="saveBtn" class="hidden" onclick="saveData()">SAVE CHANGES</button>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EFL Season 1 Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div id="captureArea" class="main-bg">
+        <header class="league-header">
+            <img src="1775293871024.png" alt="EFL Logo" class="main-logo">
+            <h1 class="gold-text">ELITE FOOTBALL LEAGUE</h1>
+            <p class="season-text">SEASON 1</p>
+        </header>
+
+        <div class="awards-row">
+            <div class="award-box">
+                <span class="label">🔥 TOP SCORER</span>
+                <div id="topScorer" class="val">---</div>
+            </div>
+            <div class="award-box">
+                <span class="label">🛡️ BEST DEFENCE</span>
+                <div id="bestDefense" class="val">---</div>
+            </div>
+        </div>
+
+        <section class="standings-container">
+            <div class="grid-row header">
+                <div class="c-pos">POS</div>
+                <div class="c-name">PLAYER NAME</div>
+                <div class="c-s">P</div>
+                <div class="c-s">W</div>
+                <div class="c-s">D</div>
+                <div class="c-s">L</div>
+                <div class="c-s">GF</div>
+                <div class="c-s">GA</div>
+                <div class="c-s">GD</div>
+                <div class="c-pts">Pts</div>
+            </div>
+            <div id="tableBody"></div>
+        </section>
+
+        <div class="footer-graphic">
+            <img src="https://cdn-icons-png.flaticon.com/512/53/53254.png" class="ball">
+        </div>
+    </div>
+
+    <div class="admin-panel">
+        <button onclick="downloadTable()" class="btn-gold">Download PNG</button>
+        <button onclick="unlockAdmin()" class="btn-link">Admin Login</button>
+    </div>
+
+    <section class="fixtures-section">
+        <h2 class="gold-text">FIXTURES</h2>
+        <div id="fixtureContainer"></div>
+        <button id="saveBtn" class="hidden" onclick="saveData()">SAVE CHANGES</button>
     </section>
 
     <script src="script.js"></script>
