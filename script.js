@@ -1,15 +1,42 @@
 const players = ["KIBET ARON", "BRALYN KIPKIRUI", "MANU KHEED", "LINO", "HOLYPLUG", "MANU JOSH", "BLAMEK", "IAN TOO"];
 
-// Initial empty fixtures
+// Full 7-Round Schedule (28 Matches)
 let fixtures = [
-    { p1: "KIBET ARON", p2: "IAN TOO", s1: null, s2: null },
-    { p1: "BRALYN KIPKIRUI", p2: "BLAMEK", s1: null, s2: null },
-    { p1: "MANU KHEED", p2: "MANU JOSH", s1: null, s2: null },
-    { p1: "LINO", p2: "HOLYPLUG", s1: null, s2: null },
-    { p1: "IAN TOO", p2: "HOLYPLUG", s1: null, s2: null },
-    { p1: "MANU JOSH", p2: "LINO", s1: null, s2: null },
-    { p1: "BLAMEK", p2: "MANU KHEED", s1: null, s2: null },
-    { p1: "KIBET ARON", p2: "BRALYN KIPKIRUI", s1: null, s2: null }
+    // ROUND 1
+    { r: 1, p1: "KIBET ARON", p2: "IAN TOO", s1: null, s2: null },
+    { r: 1, p1: "BRALYN KIPKIRUI", p2: "BLAMEK", s1: null, s2: null },
+    { r: 1, p1: "MANU KHEED", p2: "MANU JOSH", s1: null, s2: null },
+    { r: 1, p1: "LINO", p2: "HOLYPLUG", s1: null, s2: null },
+    // ROUND 2
+    { r: 2, p1: "IAN TOO", p2: "HOLYPLUG", s1: null, s2: null },
+    { r: 2, p1: "MANU JOSH", p2: "LINO", s1: null, s2: null },
+    { r: 2, p1: "BLAMEK", p2: "MANU KHEED", s1: null, s2: null },
+    { r: 2, p1: "KIBET ARON", p2: "BRALYN KIPKIRUI", s1: null, s2: null },
+    // ROUND 3
+    { r: 3, p1: "BRALYN KIPKIRUI", p2: "IAN TOO", s1: null, s2: null },
+    { r: 3, p1: "MANU KHEED", p2: "KIBET ARON", s1: null, s2: null },
+    { r: 3, p1: "LINO", p2: "BLAMEK", s1: null, s2: null },
+    { r: 3, p1: "HOLYPLUG", p2: "MANU JOSH", s1: null, s2: null },
+    // ROUND 4
+    { r: 4, p1: "IAN TOO", p2: "MANU JOSH", s1: null, s2: null },
+    { r: 4, p1: "BLAMEK", p2: "HOLYPLUG", s1: null, s2: null },
+    { r: 4, p1: "KIBET ARON", p2: "LINO", s1: null, s2: null },
+    { r: 4, p1: "BRALYN KIPKIRUI", p2: "MANU KHEED", s1: null, s2: null },
+    // ROUND 5
+    { r: 5, p1: "MANU KHEED", p2: "IAN TOO", s1: null, s2: null },
+    { r: 5, p1: "LINO", p2: "BRALYN KIPKIRUI", s1: null, s2: null },
+    { r: 5, p1: "HOLYPLUG", p2: "KIBET ARON", s1: null, s2: null },
+    { r: 5, p1: "MANU JOSH", p2: "BLAMEK", s1: null, s2: null },
+    // ROUND 6
+    { r: 6, p1: "IAN TOO", p2: "BLAMEK", s1: null, s2: null },
+    { r: 6, p1: "KIBET ARON", p2: "MANU JOSH", s1: null, s2: null },
+    { r: 6, p1: "BRALYN KIPKIRUI", p2: "HOLYPLUG", s1: null, s2: null },
+    { r: 6, p1: "MANU KHEED", p2: "LINO", s1: null, s2: null },
+    // ROUND 7
+    { r: 7, p1: "LINO", p2: "IAN TOO", s1: null, s2: null },
+    { r: 7, p1: "HOLYPLUG", p2: "MANU KHEED", s1: null, s2: null },
+    { r: 7, p1: "MANU JOSH", p2: "BRALYN KIPKIRUI", s1: null, s2: null },
+    { r: 7, p1: "BLAMEK", p2: "KIBET ARON", s1: null, s2: null }
 ];
 
 function unlockAdmin() {
@@ -22,7 +49,13 @@ function unlockAdmin() {
 function renderFixtures() {
     const list = document.getElementById('fixtureList');
     list.innerHTML = '';
+    let currentRound = 0;
+
     fixtures.forEach((f, i) => {
+        if (f.r !== currentRound) {
+            currentRound = f.r;
+            list.innerHTML += `<div style="color:var(--gold); font-weight:bold; margin: 15px 0 5px 0; border-bottom: 1px solid var(--gold); font-size: 0.9rem;">ROUND ${currentRound}</div>`;
+        }
         list.innerHTML += `
             <div class="match-row">
                 <span style="width:38%; text-align:right;">${f.p1}</span>
@@ -59,7 +92,7 @@ function calculateTable() {
 
     const sorted = Object.entries(stats).sort((a,b) => b[1].pts - a[1].pts || b[1].gd - a[1].gd);
     
-    // Update Awards
+    // Awards update
     const ts = Object.entries(stats).sort((a,b) => b[1].gf - a[1].gf)[0];
     const bd = Object.entries(stats).filter(x => x[1].p > 0).sort((a,b) => a[1].ga - b[1].ga)[0];
     document.getElementById('topScorer').innerText = ts[1].gf > 0 ? `${ts[0]} (${ts[1].gf})` : "---";
@@ -90,12 +123,11 @@ function downloadTable() {
 }
 
 function saveData() {
-    localStorage.setItem('efl_final_v6', JSON.stringify(fixtures));
-    alert("SCORES PUBLISHED SUCCESSFULLY!");
+    localStorage.setItem('efl_final_v7', JSON.stringify(fixtures));
+    alert("ALL 7 ROUNDS UPDATED!");
 }
 
-// Load data on start
-const local = localStorage.getItem('efl_final_v6');
+const local = localStorage.getItem('efl_final_v7');
 if (local) fixtures = JSON.parse(local);
 calculateTable();
-        
+                    
