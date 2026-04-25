@@ -3,124 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EFL Season 1 Portal</title>
-    <link rel="stylesheet" href="style.css">
+    <title>EFL | Season 1</title>
+    <style>
+        :root { --gold: #d4af37; --navy: #020617; --white: #ffffff; }
+        body { background: #000; color: #fff; font-family: 'Arial', sans-serif; margin: 0; padding: 0; }
+        
+        .main-bg { 
+            background: linear-gradient(180deg, #0f172a 0%, #020617 100%); 
+            padding: 20px 0; 
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .league-title { color: var(--gold); font-size: 1.8rem; margin: 10px 0; font-weight: 900; }
+        .season-text { letter-spacing: 5px; font-size: 0.9rem; opacity: 0.8; margin-bottom: 20px; }
+
+        /* Awards Styling */
+        .awards-container { display: flex; gap: 10px; padding: 0 15px; margin-bottom: 20px; }
+        .award-box { 
+            flex: 1; border: 1px solid var(--gold); border-radius: 8px; 
+            padding: 12px; background: rgba(212,175,55,0.1); 
+        }
+        .award-label { font-size: 0.6rem; color: var(--gold); font-weight: bold; display: block; margin-bottom: 4px; }
+        .award-val { font-size: 0.85rem; font-weight: bold; }
+
+        /* THE TABLE FIX - GRID SYSTEM */
+        .standings-wrapper { overflow-x: auto; width: 100%; border-top: 2px solid var(--gold); border-bottom: 2px solid var(--gold); }
+        .row { display: flex; min-width: 600px; align-items: center; border-bottom: 1px solid rgba(212,175,55,0.2); }
+        .header { background: var(--gold); color: #000; font-weight: bold; font-size: 0.75rem; padding: 10px 0; }
+        
+        /* Column Widths */
+        .c-pos { width: 40px; text-align: center; }
+        .c-name { flex: 1; text-align: left; padding-left: 10px; border-left: 1px solid rgba(0,0,0,0.1); text-transform: uppercase; font-size: 0.85rem; }
+        .c-s { width: 40px; text-align: center; border-left: 1px solid rgba(212,175,55,0.2); font-size: 0.8rem; }
+        .c-pts { width: 50px; text-align: center; font-weight: bold; color: var(--gold); border-left: 1px solid rgba(212,175,55,0.2); background: rgba(212,175,55,0.1); }
+        
+        .header .c-name, .header .c-s, .header .c-pts { border-left: 1px solid rgba(0,0,0,0.1); }
+
+        /* Fixtures & Admin */
+        .fixtures { background: #0a101f; padding: 20px; text-align: left; }
+        .match { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #1e293b; align-items: center; }
+        input { width: 35px; background: #000; color: var(--gold); border: 1px solid var(--gold); text-align: center; padding: 4px; }
+        .btn-save { width: 100%; background: var(--gold); border: none; padding: 15px; font-weight: bold; margin-top: 15px; border-radius: 5px; cursor: pointer; }
+        .admin-link { color: #475569; font-size: 0.7rem; text-decoration: none; margin-top: 20px; display: inline-block; cursor: pointer; }
+        .hidden { display: none; }
+    </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
     <div id="captureArea" class="main-bg">
-        <header class="league-header">
-            <img src="1000059186.png" alt="EFL Logo" class="main-logo">
-            <h1 class="gold-text">ELITE FOOTBALL LEAGUE</h1>
+        <header>
+            <h1 class="league-title">ELITE FOOTBALL LEAGUE</h1>
             <p class="season-text">SEASON 1</p>
         </header>
 
-        <div class="awards-row">
+        <div class="awards-container">
             <div class="award-box">
-                <span class="label">🔥 TOP SCORER</span>
-                <div id="topScorer" class="val">---</div>
+                <span class="award-label">🔥 TOP SCORER</span>
+                <div id="topScorer" class="award-val">Waiting...</div>
             </div>
             <div class="award-box">
-                <span class="label">🛡️ BEST DEFENCE</span>
-                <div id="bestDefense" class="val">---</div>
+                <span class="award-label">🛡️ BEST DEFENCE</span>
+                <div id="bestDefense" class="award-val">Waiting...</div>
             </div>
         </div>
 
-        <section class="standings-container">
-            <div class="grid-row header">
+        <div class="standings-wrapper">
+            <div class="row header">
                 <div class="c-pos">POS</div>
                 <div class="c-name">PLAYER NAME</div>
-                <div class="c-s">P</div>
-                <div class="c-s">W</div>
-                <div class="c-s">D</div>
-                <div class="c-s">L</div>
-                <div class="c-s">GF</div>
-                <div class="c-s">GA</div>
-                <div class="c-s">GD</div>
+                <div class="c-s">P</div><div class="c-s">W</div><div class="c-s">D</div><div class="c-s">L</div>
+                <div class="c-s">GF</div><div class="c-s">GA</div><div class="c-s">GD</div>
                 <div class="c-pts">Pts</div>
             </div>
             <div id="tableBody"></div>
-        </section>
-
-        <div class="footer-graphic">
-            <img src="https://cdn-icons-png.flaticon.com/512/53/53254.png" class="ball">
         </div>
     </div>
 
-    <div class="admin-panel">
-        <button onclick="downloadTable()" class="btn-gold">Download PNG</button>
-        <button onclick="unlockAdmin()" class="btn-link">Admin Login</button>
+    <div style="text-align:center; padding: 20px;">
+        <button onclick="downloadTable()" style="background:var(--gold); border:none; padding:10px 20px; font-weight:bold; border-radius:4px;">Download Standings</button>
+        <br>
+        <span class="admin-link" onclick="unlockAdmin()">Admin Login</span>
     </div>
 
-    <section class="fixtures-section">
-        <h2 class="gold-text">FIXTURES</h2>
+    <section class="fixtures">
+        <h2 style="color:var(--gold)">FIXTURES & RESULTS</h2>
         <div id="fixtureContainer"></div>
-        <button id="saveBtn" class="hidden" onclick="saveData()">SAVE CHANGES</button>
+        <button id="saveBtn" class="hidden btn-save" onclick="saveData()">SAVE & UPDATE TABLE</button>
     </section>
 
-    <script src="script.js"></script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EFL Season 1 Portal</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-</head>
-<body>
-    <div id="captureArea" class="main-bg">
-        <header class="league-header">
-            <img src="1775293871024.png" alt="EFL Logo" class="main-logo">
-            <h1 class="gold-text">ELITE FOOTBALL LEAGUE</h1>
-            <p class="season-text">SEASON 1</p>
-        </header>
+    <script>
+        const players = ["Kibet Aron", "Bralyn Kipkirui", "Manu Kheed", "Lino", "Holyplug", "Manu Josh", "Blamek", "Ian Too"];
+        let fixtures = [
+            { r: 1, p1: "Kibet Aron", p2: "Ian Too", s1: null, s2: null },
+            { r: 1, p1: "Bralyn Kipkirui", p2: "Blamek", s1: null, s2: null },
+            { r: 1, p1: "Manu Kheed", p2: "Manu Josh", s1: null, s2: null },
+            { r: 1, p1: "Lino", p2: "Holyplug", s1: null, s2: null },
+            { r: 2, p1: "Ian Too", p2: "Holyplug", s1: null, s2: null },
+            { r: 2, p1: "Manu Josh", p2: "Lino", s1: null, s2: null },
+            { r: 2, p1: "Blamek", p2: "Manu Kheed", s1: null, s2: null },
+            { r: 2, p1: "Kibet Aron", p2: "Bralyn Kipkirui", s1: null, s2: null }
+        ];
 
-        <div class="awards-row">
-            <div class="award-box">
-                <span class="label">🔥 TOP SCORER</span>
-                <div id="topScorer" class="val">---</div>
-            </div>
-            <div class="award-box">
-                <span class="label">🛡️ BEST DEFENCE</span>
-                <div id="bestDefense" class="val">---</div>
-            </div>
-        </div>
+        let isAdmin = false;
 
-        <section class="standings-container">
-            <div class="grid-row header">
-                <div class="c-pos">POS</div>
-                <div class="c-name">PLAYER NAME</div>
-                <div class="c-s">P</div>
-                <div class="c-s">W</div>
-                <div class="c-s">D</div>
-                <div class="c-s">L</div>
-                <div class="c-s">GF</div>
-                <div class="c-s">GA</div>
-                <div class="c-s">GD</div>
-                <div class="c-pts">Pts</div>
-            </div>
-            <div id="tableBody"></div>
-        </section>
+        function unlockAdmin() {
+            if (prompt("Password:") === "EliteAdmin2026") {
+                isAdmin = true;
+                document.getElementById('saveBtn').classList.remove('hidden');
+                renderFixtures();
+            }
+        }
 
-        <div class="footer-graphic">
-            <img src="https://cdn-icons-png.flaticon.com/512/53/53254.png" class="ball">
-        </div>
-    </div>
+        function renderFixtures() {
+            const container = document.getElementById('fixtureContainer');
+            container.innerHTML = '';
+            fixtures.forEach((f, i) => {
+                container.innerHTML += `
+                    <div class="match">
+                        <span style="width:35%; text-align:right">${f.p1}</span>
+                        <div>
+                            <input type="number" value="${f.s1!==null?f.s1:''}" ${!isAdmin?'readonly':''} onchange="updateScore(${i},'s1',this.value)">
+                            <input type="number" value="${f.s2!==null?f.s2:''}" ${!isAdmin?'readonly':''} onchange="updateScore(${i},'s2',this.value)">
+                        </div>
+                        <span style="width:35%">${f.p2}</span>
+                    </div>`;
+            });
+        }
 
-    <div class="admin-panel">
-        <button onclick="downloadTable()" class="btn-gold">Download PNG</button>
-        <button onclick="unlockAdmin()" class="btn-link">Admin Login</button>
-    </div>
+        function updateScore(idx, key, val) {
+            fixtures[idx][key] = val === "" ? null : parseInt(val);
+            calculateTable();
+        }
 
-    <section class="fixtures-section">
-        <h2 class="gold-text">FIXTURES</h2>
-        <div id="fixtureContainer"></div>
-        <button id="saveBtn" class="hidden" onclick="saveData()">SAVE CHANGES</button>
-    </section>
+        function calculateTable() {
+            let stats = {};
+            players.forEach(p => stats[p] = { p:0, w:0, d:0, l:0, gf:0, ga:0, gd:0, pts:0 });
+            
+            fixtures.forEach(f => {
+                if (f.s1 !== null && f.s2 !== null) {
+                    stats[f.p1].p++; stats[f.p2].p++;
+                    stats[f.p1].gf += f.s1; stats[f.p1].ga += f.s2;
+                    stats[f.p2].gf += f.s2; stats[f.p2].ga += f.s1;
+                    if (f.s1 > f.s2) { stats[f.p1].w++; stats[f.p1].pts += 3; stats[f.p2].l++; }
+                    else if (f.s1 < f.s2) { stats[f.p2].w++; stats[f.p2].pts += 3; stats[f.p1].l++; }
+                    else { stats[f.p1].d++; stats[f.p2].d++; stats[f.p1].pts += 1; stats[f.p2].pts += 1; }
+                    stats[f.p1].gd = stats[f.p1].gf - stats[f.p1].ga;
+                    stats[f.p2].gd = stats[f.p2].gf - stats[f.p2].ga;
+                }
+            });
 
-    <script src="script.js"></script>
+            const sorted = Object.entries(stats).sort((a,b) => b[1].pts - a[1].pts || b[1].gd - a[1].gd);
+            
+            const ts = Object.entries(stats).sort((a,b) => b[1].gf - a[1].gf)[0];
+            const bd = Object.entries(stats).filter(x => x[1].p > 0).sort((a,b) => a[1].ga - b[1].ga)[0];
+            document.getElementById('topScorer').innerText = ts[1].gf > 0 ? `${ts[0]} (${ts[1].gf})` : "---";
+            document.getElementById('bestDefense').innerText = bd ? `${bd[0]} (${bd[1].ga} GA)` : "---";
+
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            sorted.forEach((item, i) => {
+                const [name, s] = item;
+                tbody.innerHTML += `
+                    <div class="row">
+                        <div class="c-pos">${i+1}</div>
+                        <div class="c-name">${name}</div>
+                        <div class="c-s">${s.p}</div><div class="c-s">${s.w}</div><div class="c-s">${s.d}</div><div class="c-s">${s.l}</div>
+                        <div class="c-s">${s.gf}</div><div class="c-s">${s.ga}</div><div class="c-s">${s.gd}</div>
+                        <div class="c-pts">${s.pts}</div>
+                    </div>`;
+            });
+        }
+
+        function downloadTable() {
+            html2canvas(document.querySelector("#captureArea")).then(canvas => {
+                let link = document.createElement('a');
+                link.download = 'EFL_Standings.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+
+        function saveData() {
+            localStorage.setItem('efl_final_v1', JSON.stringify(fixtures));
+            alert("Updated!");
+        }
+
+        const local = localStorage.getItem('efl_final_v1');
+        if (local) fixtures = JSON.parse(local);
+        renderFixtures();
+        calculateTable();
+    </script>
 </body>
 </html>
