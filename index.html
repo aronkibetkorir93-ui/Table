@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EFL Season 1 | Official Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <header>
+        <img src="1000059186.png" alt="EFL Logo" class="logo">
+        <h1 class="gold-text">ELITE FOOTBALL LEAGUE</h1>
+        <button id="adminToggle" onclick="unlockAdmin()">Admin Login</button>
+    </header>
+
+    <main class="container">
+        <div class="awards-grid">
+            <div class="award-card">
+                <div class="award-title">🔥 TOP SCORER</div>
+                <div id="topScorer" class="award-name">Waiting for goals...</div>
+            </div>
+            <div class="award-card">
+                <div class="award-title">🛡️ BEST DEFENCE</div>
+                <div id="bestDefense" class="award-name">Clean sheet era...</div>
+            </div>
+        </div>
+
+        <section class="card" id="captureArea">
+            <div class="card-header">
+                <h2>LEAGUE STANDINGS</h2>
+                <button id="downloadBtn" onclick="downloadTable()">Download PNG</button>
+            </div>
+            <div class="table-scroll-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="col-rank">#</th>
+                            <th class="col-name text-left">Player</th>
+                            <th class="col-stat">P</th>
+                            <th class="col-stat">W</th>
+                            <th class="col-stat">D</th>
+                            <th class="col-stat">L</th>
+                            <th class="col-stat">GF</th>
+                            <th class="col-stat">GA</th>
+                            <th class="col-stat">GD</th>
+                            <th class="col-stat gold-pts">Pts</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>FIXTURES & RESULTS</h2>
+            <div id="fixtureContainer"></div>
+            <button id="saveBtn" class="hidden" onclick="saveData()">SAVE ALL RESULTS</button>
+        </section>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
