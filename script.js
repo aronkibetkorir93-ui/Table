@@ -49,14 +49,16 @@ function renderFixtures() {
     fixtures.forEach((f, i) => {
         if (f.r !== currentR) {
             currentR = f.r;
-            container.innerHTML += `<div style="color:var(--gold); padding:10px 0; border-bottom:1px solid var(--gold)">ROUND ${currentR}</div>`;
+            container.innerHTML += `<div style="color:var(--gold); padding:10px 0; border-bottom:1px solid #1e293b">WEEK ${currentR}</div>`;
         }
         container.innerHTML += `
             <div class="match">
-                <span style="width:40%; text-align:right">${f.p1}</span>
-                <input type="number" value="${f.s1!==null?f.s1:''}" ${!isAdmin?'readonly':''} onchange="updateScore(${i},'s1',this.value)" style="width:30px; text-align:center; background:#000; color:var(--gold); border:1px solid var(--gold)">
-                <input type="number" value="${f.s2!==null?f.s2:''}" ${!isAdmin?'readonly':''} onchange="updateScore(${i},'s2',this.value)" style="width:30px; text-align:center; background:#000; color:var(--gold); border:1px solid var(--gold)">
-                <span style="width:40%">${f.p2}</span>
+                <span style="width:35%; text-align:right">${f.p1}</span>
+                <div style="display:flex; gap:4px">
+                    <input type="number" value="${f.s1!==null?f.s1:''}" ${!isAdmin?'readonly':''} onchange="updateScore(${i},'s1',this.value)">
+                    <input type="number" value="${f.s2!==null?f.s2:''}" ${!isAdmin?'readonly':''} onchange="updateScore(${i},'s2',this.value)">
+                </div>
+                <span style="width:35%">${f.p2}</span>
             </div>`;
     });
 }
@@ -85,10 +87,8 @@ function calculateTable() {
 
     const sorted = Object.entries(stats).sort((a,b) => b[1].pts - a[1].pts || b[1].gd - a[1].gd);
     
-    // Awards calculation
     const ts = Object.entries(stats).sort((a,b) => b[1].gf - a[1].gf)[0];
     const bd = Object.entries(stats).filter(x => x[1].p > 0).sort((a,b) => a[1].ga - b[1].ga)[0];
-    
     document.getElementById('topScorer').innerText = ts[1].gf > 0 ? `${ts[0]} (${ts[1].gf})` : "---";
     document.getElementById('bestDefense').innerText = bd ? `${bd[0]} (${bd[1].ga} GA)` : "---";
 
@@ -97,17 +97,17 @@ function calculateTable() {
     sorted.forEach((item, i) => {
         const [name, s] = item;
         tbody.innerHTML += `
-            <div class="table-row">
-                <span class="col-pos">${i+1}</span>
-                <span class="col-name">${name}</span>
-                <span class="col-s">${s.p}</span>
-                <span class="col-s">${s.w}</span>
-                <span class="col-s">${s.d}</span>
-                <span class="col-s">${s.l}</span>
-                <span class="col-s">${s.gf}</span>
-                <span class="col-s">${s.ga}</span>
-                <span class="col-s">${s.gd}</span>
-                <span class="col-pts">${s.pts}</span>
+            <div class="grid-row">
+                <div class="c-pos">${i+1}</div>
+                <div class="c-name">${name}</div>
+                <div class="c-s">${s.p}</div>
+                <div class="c-s">${s.w}</div>
+                <div class="c-s">${s.d}</div>
+                <div class="c-s">${s.l}</div>
+                <div class="c-s">${s.gf}</div>
+                <div class="c-s">${s.ga}</div>
+                <div class="c-s">${s.gd}</div>
+                <div class="c-pts">${s.pts}</div>
             </div>`;
     });
 }
@@ -122,11 +122,12 @@ function downloadTable() {
 }
 
 function saveData() {
-    localStorage.setItem('efl_final', JSON.stringify(fixtures));
-    alert("Standings Updated!");
+    localStorage.setItem('efl_v_fixed', JSON.stringify(fixtures));
+    alert("Updated Standings!");
 }
 
-const local = localStorage.getItem('efl_final');
+const local = localStorage.getItem('efl_v_fixed');
 if (local) fixtures = JSON.parse(local);
 renderFixtures();
 calculateTable();
+        
